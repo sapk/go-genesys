@@ -27,12 +27,14 @@ type Client struct {
 }
 
 //NewClient generate a client to communicate with a specific instance
-func NewClient(host string) *Client {
-	//TODO manage https
+func NewClient(host string, useSSL bool) *Client {
 	cookieJar, _ := cookiejar.New(nil)
 	c := &Client{BaseURL: &url.URL{Host: host, Scheme: "http", Path: "/gax/api/"}, UserAgent: "go-genesys/0.0", httpClient: &http.Client{
 		Jar: cookieJar,
 	}}
+	if useSSL {
+		c.BaseURL.Scheme = "https"
+	}
 	return c
 }
 
