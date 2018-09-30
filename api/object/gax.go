@@ -18,6 +18,17 @@ var TypeListShort = []Type{
 	Type{10, "CfgHost", "Host", true},
 }
 
+//TypeListDefined Contain object that have a golang representation
+var TypeListDefined = []Type{
+	Type{2, "CfgDN", "DN", true},
+	Type{3, "CfgPerson", "Person", true},
+	Type{5, "CfgAgentGroup", "Agent Group", true},
+	Type{9, "CfgApplication", "Application", true},
+	Type{10, "CfgHost", "Host", true},
+	Type{17, "CfgDNGroup", "DN Group", true},
+	Type{21, "CfgAccessGroup", "Access Group", true},
+}
+
 //TypeList Contain almost all object
 var TypeList = []Type{
 	//Type{0, "CfgNoObject", "Unknown Object",true},
@@ -56,7 +67,7 @@ var TypeList = []Type{
 	Type{33, "CfgIVR", "IVR", true},
 	Type{34, "CfgAlarmCondition", "Alarm Condition", true},
 	Type{35, "CfgEnumerator", "Business Attribute", true},
-	Type{36, "CfgEnumeratorValue ", "Business Attribute Value", true},
+	Type{36, "CfgEnumeratorValue", "Business Attribute Value", true},
 	Type{37, "CfgObjectiveTable", "Objective Table", true},
 	Type{38, "CfgCampaignGroup", "Campaign Group", true},
 	//Type{39, "CfgGVPReseller", "GVP Reseller",true},

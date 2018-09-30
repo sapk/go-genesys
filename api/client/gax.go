@@ -1,13 +1,12 @@
 package client
 
 // Copyright © 2018 Antoine GIRARD <antoine.girard@sapk.fr>
+//go:generate go run ../generate/client.go
 
 import (
 	"errors"
 	"fmt"
 	"net/http"
-
-	"github.com/mitchellh/mapstructure"
 
 	"github.com/sapk/go-genesys/api/object"
 )
@@ -89,56 +88,6 @@ func (c *Client) GetObjectByName(objType, objName string) (map[string]interface{
 	}
 	return objList[0], resp, nil
 }
-
-/*
-TODO generate this based on object list
-*/
-
-//GetApplicationByName retrieve a specific application by name
-func (c *Client) GetApplicationByName(name string) (*object.CfgApplication, error) {
-	var app object.CfgApplication
-	obj, _, err := c.GetObjectByName("CfgApplication", name)
-	if err != nil {
-		return nil, err
-	}
-	err = mapstructure.Decode(obj, &app) //TODO find a better way because mapstructure can use reflect under the hood
-	if err != nil {
-		return nil, err
-	}
-	return &app, nil
-}
-
-/*
-func (c *Client) ListApplication() ([]object.CfgApplication, error) {
-	var apps []object.CfgApplication
-	_, err := c.ListObject("CfgApplication", &apps)
-	return apps, err
-}
-
-func (c *Client) ListHost() ([]object.CfgHost, error) {
-	var apps []object.CfgHost
-	_, err := c.ListObject("CfgHost", &apps)
-	return apps, err
-}
-
-func (c *Client) ListDN() ([]object.CfgDN, error) {
-	var apps []object.CfgDN
-	_, err := c.ListObject("CfgDN", &apps)
-	return apps, err
-}
-
-func (c *Client) ListSwitch() ([]object.CfgSwitch, error) {
-	var apps []object.CfgSwitch
-	_, err := c.ListObject("CfgSwitch", &apps)
-	return apps, err
-}
-
-func (c *Client) ListPlace() ([]object.CfgPlace, error) {
-	var apps []object.CfgPlace
-	_, err := c.ListObject("CfgPlace", &apps)
-	return apps, err
-}
-*/
 
 //TODO http://host:8080/gax/api/cfg/tree/CfgApplication/104/path
 //TODO http://host:8080/gax/api/cfgobjects/search?type=CfgPerson&iscasesensitive=false&name=test
