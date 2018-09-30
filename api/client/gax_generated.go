@@ -1,6 +1,5 @@
-package client
-
 // Copyright © 2018 Antoine GIRARD <antoine.girard@sapk.fr>
+package client
 
 //Generated file DO NOT EDIT
 

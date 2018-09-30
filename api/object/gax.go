@@ -1,6 +1,6 @@
+// Copyright © 2018 Antoine GIRARD <antoine.girard@sapk.fr>
 package object
 
-// Copyright © 2018 Antoine GIRARD <antoine.girard@sapk.fr>
 //Information mostly from https://docs.genesys.com/Documentation/PSDK/9.0.x/ConfigLayerRef/CfgType
 
 //Type Type of object

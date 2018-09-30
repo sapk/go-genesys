@@ -1,3 +1,4 @@
+// Copyright © 2018 Antoine GIRARD <antoine.girard@sapk.fr>
 package client
 
 import (

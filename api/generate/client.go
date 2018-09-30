@@ -1,6 +1,5 @@
-package main
-
 // Copyright © 2018 Antoine GIRARD <antoine.girard@sapk.fr>
+package main
 
 //Generate each function for types
 //go generate ./api/client/
@@ -16,9 +15,8 @@ import (
 )
 
 func main() {
-	str := `package client
-
-// Copyright © 2018 Antoine GIRARD <antoine.girard@sapk.fr>
+	str := `// Copyright © 2018 Antoine GIRARD <antoine.girard@sapk.fr>
+package client
 
 //Generated file DO NOT EDIT
 

@@ -1,6 +1,6 @@
+// Copyright © 2018 Antoine GIRARD <antoine.girard@sapk.fr>
 package client
 
-// Copyright © 2018 Antoine GIRARD <antoine.girard@sapk.fr>
 //go:generate go run ../generate/client.go
 
 import (
