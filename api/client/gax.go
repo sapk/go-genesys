@@ -101,7 +101,7 @@ func (c *Client) GetApplicationByName(name string) (*object.CfgApplication, erro
 	if err != nil {
 		return nil, err
 	}
-	err = mapstructure.Decode(obj, &app)
+	err = mapstructure.Decode(obj, &app) //TODO find a better way because mapstructure can use reflect under the hood
 	if err != nil {
 		return nil, err
 	}
