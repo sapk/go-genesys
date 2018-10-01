@@ -93,3 +93,4 @@ func (c *Client) GetObjectByName(objType, objName string) (map[string]interface{
 //TODO http://host:8080/gax/api/cfgobjects/search?type=CfgPerson&iscasesensitive=false&name=test
 //TODO http://host:8080/gax/api/cfg/objects?brief=true&filters=folderid%3D102+AND+subtype%3DCFGFolder+OR+folderid%3D102+AND+subtype%3DCFGApplication&type=CfgFolder
 //TODO http://host:8080/gax/api/scs/applications hosts alarms solutions
+//TODO http://host:8080/gax/api/cfg/appmetadata/102

@@ -135,6 +135,27 @@ func (c *Client) GetDNGroupByName(name string) (*object.CfgDNGroup, error) {
 	return &obj, nil
 }
 
+//ListAppPrototype list all Application Template
+func (c *Client) ListAppPrototype() ([]object.CfgAppPrototype, error) {
+	var apps []object.CfgAppPrototype
+	_, err := c.ListObject("CfgAppPrototype", &apps)
+	return apps, err
+}
+
+//GetAppPrototypeByName retrieve a specific Application Template by name
+func (c *Client) GetAppPrototypeByName(name string) (*object.CfgAppPrototype, error) {
+	var obj object.CfgAppPrototype
+	o, _, err := c.GetObjectByName("CfgAppPrototype", name)
+	if err != nil {
+		return nil, err
+	}
+	err = mapstructure.Decode(o, &obj) //TODO find a better way because mapstructure can use reflect under the hood
+	if err != nil {
+		return nil, err
+	}
+	return &obj, nil
+}
+
 //ListAccessGroup list all Access Group
 func (c *Client) ListAccessGroup() ([]object.CfgAccessGroup, error) {
 	var apps []object.CfgAccessGroup
@@ -146,6 +167,27 @@ func (c *Client) ListAccessGroup() ([]object.CfgAccessGroup, error) {
 func (c *Client) GetAccessGroupByName(name string) (*object.CfgAccessGroup, error) {
 	var obj object.CfgAccessGroup
 	o, _, err := c.GetObjectByName("CfgAccessGroup", name)
+	if err != nil {
+		return nil, err
+	}
+	err = mapstructure.Decode(o, &obj) //TODO find a better way because mapstructure can use reflect under the hood
+	if err != nil {
+		return nil, err
+	}
+	return &obj, nil
+}
+
+//ListFolder list all Folder
+func (c *Client) ListFolder() ([]object.CfgFolder, error) {
+	var apps []object.CfgFolder
+	_, err := c.ListObject("CfgFolder", &apps)
+	return apps, err
+}
+
+//GetFolderByName retrieve a specific Folder by name
+func (c *Client) GetFolderByName(name string) (*object.CfgFolder, error) {
+	var obj object.CfgFolder
+	o, _, err := c.GetObjectByName("CfgFolder", name)
 	if err != nil {
 		return nil, err
 	}

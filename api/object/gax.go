@@ -26,7 +26,9 @@ var TypeListDefined = []Type{
 	Type{9, "CfgApplication", "Application", true},
 	Type{10, "CfgHost", "Host", true},
 	Type{17, "CfgDNGroup", "DN Group", true},
+	Type{20, "CfgAppPrototype", "Application Template", true},
 	Type{21, "CfgAccessGroup", "Access Group", true},
+	Type{22, "CfgFolder", "Folder", true},
 }
 
 //TypeList Contain almost all object
@@ -101,6 +103,39 @@ type CfgObject struct {
 	Name string `json:"name"`
 	Type string `json:"type"`
 }
+
+//CfgFolder represent a folder
+type CfgFolder struct {
+	Folderclass string `json:"folderclass"`
+	Subtype     string `json:"subtype"`
+	Ownertype   string `json:"ownertype"`
+	Dbid        string `json:"dbid"`
+	Ownerdbid   string `json:"ownerdbid"`
+	Name        string `json:"name"`
+	Resources   struct {
+		Resource []interface{} `json:"resource"` //TODO
+	} `json:"resources"`
+	State      string `json:"state"`
+	Type       string `json:"type"`
+	Customtype string `json:"customtype"`
+	Objectids  struct {
+		Idtype CfgDBIDList `json:"idtype"`
+	} `json:"objectids"`
+}
+
+//CfgAppPrototype represent a application template
+type CfgAppPrototype struct {
+	Subtype  string  `json:"subtype"`
+	Dbid     string  `json:"dbid"`
+	Name     string  `json:"name"`
+	Options  Options `json:"options"`
+	State    string  `json:"state"`
+	Type     string  `json:"type"`
+	Version  string  `json:"version"`
+	Folderid string  `json:"folderid"`
+}
+
+//TODO add get metadata
 
 /*
 
