@@ -157,6 +157,7 @@ type CfgDN struct {
 	Accessnumbers struct {
 		Dnaccessnumber []interface{} `json:"dnaccessnumber"`
 	} `json:"accessnumbers"`
+	Name               string `json:"name"`
 	Contractdbid       string `json:"contractdbid"`
 	Dbid               string `json:"dbid"`
 	Folderid           string `json:"folderid"`
@@ -312,19 +313,19 @@ type CfgApplication struct {
 			Longfield4    string `json:"longfield4"`
 			Timoutremote  string `json:"timoutremote"`
 			ID            string `json:"id"`
-		} `json:"conninfo"`
-	} `json:"appservers"`
-	Autorestart          string         `json:"autorestart"`
-	Userproperties       Userproperties `json:"userproperties"`
-	Timeout              string         `json:"timeout"`
-	Commandline          string         `json:"commandline"`
+		} `json:"conninfo,omitempty"`
+	} `json:"appservers,omitempty"`
+	Autorestart          string         `json:"autorestart,omitempty"`
+	Userproperties       Userproperties `json:"userproperties,omitempty"`
+	Timeout              string         `json:"timeout,omitempty"`
+	Commandline          string         `json:"commandline,omitempty"`
 	Folderid             string         `json:"folderid"`
-	Commandlinearguments string         `json:"commandlinearguments"`
-	Subtype              string         `json:"subtype"`
-	Options              Options        `json:"options"`
-	State                string         `json:"state"`
-	Hostdbid             string         `json:"hostdbid"`
-	Attempts             string         `json:"attempts"`
+	Commandlinearguments string         `json:"commandlinearguments,omitempty"`
+	Subtype              string         `json:"subtype,omitempty"`
+	Options              Options        `json:"options,omitempty"`
+	State                string         `json:"state,omitempty"`
+	Hostdbid             string         `json:"hostdbid,omitempty"`
+	Attempts             string         `json:"attempts,omitempty"`
 	Portinfos            struct {
 		Portinfo []struct {
 			Longfield1 string `json:"longfield1"`
@@ -333,27 +334,27 @@ type CfgApplication struct {
 			Port       string `json:"port"`
 			Longfield4 string `json:"longfield4"`
 			ID         string `json:"id"`
-		} `json:"portinfo"`
-	} `json:"portinfos"`
-	Workdirectory string `json:"workdirectory"`
-	Startuptype   string `json:"startuptype"`
-	Isserver      string `json:"isserver"`
+		} `json:"portinfo,omitempty"`
+	} `json:"portinfos,omitempty"`
+	Workdirectory string `json:"workdirectory,omitempty"`
+	Startuptype   string `json:"startuptype,omitempty"`
+	Isserver      string `json:"isserver,omitempty"`
 	Resources     struct {
-		Resource []interface{} `json:"resource"`
-	} `json:"resources"`
+		Resource []interface{} `json:"resource,omitempty"`
+	} `json:"resources,omitempty"`
 	Tenantdbids struct {
 		ID []struct {
 			Dbid string `json:"dbid"`
-		} `json:"id"`
-		Mode string `json:"mode"`
-	} `json:"tenantdbids"`
-	Startuptimeout   string `json:"startuptimeout"`
-	Backupserverdbid string `json:"backupserverdbid"`
-	Version          string `json:"version"`
-	Isprimary        string `json:"isprimary"`
-	Redundancytype   string `json:"redundancytype"`
-	Shutdowntimeout  string `json:"shutdowntimeout"`
-	Componenttype    string `json:"componenttype"`
+		} `json:"id,omitempty"`
+		Mode string `json:"mode,omitempty"`
+	} `json:"tenantdbids,omitempty"`
+	Startuptimeout   string `json:"startuptimeout,omitempty"`
+	Backupserverdbid string `json:"backupserverdbid,omitempty"`
+	Version          string `json:"version,omitempty"`
+	Isprimary        string `json:"isprimary,omitempty"`
+	Redundancytype   string `json:"redundancytype,omitempty"`
+	Shutdowntimeout  string `json:"shutdowntimeout,omitempty"`
+	Componenttype    string `json:"componenttype,omitempty"`
 	Appprototypedbid string `json:"appprototypedbid"`
-	Port             string `json:"port"`
+	Port             string `json:"port,omitempty"`
 }
