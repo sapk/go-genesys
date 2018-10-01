@@ -157,24 +157,25 @@ type CfgDN struct {
 	Accessnumbers struct {
 		Dnaccessnumber []interface{} `json:"dnaccessnumber"`
 	} `json:"accessnumbers"`
-	Name               string `json:"name"`
-	Contractdbid       string `json:"contractdbid"`
-	Dbid               string `json:"dbid"`
-	Folderid           string `json:"folderid"`
-	Groupdbid          string `json:"groupdbid"`
-	Loginflag          string `json:"loginflag"`
-	Number             string `json:"number"`
-	Registerall        string `json:"registerall"`
-	Routetype          string `json:"routetype"`
-	Sitedbid           string `json:"sitedbid"`
-	State              string `json:"state"`
-	Subtype            string `json:"subtype"`
-	Switchdbid         string `json:"switchdbid"`
-	Switchspecifictype string `json:"switchspecifictype"`
-	Tenantdbid         string `json:"tenantdbid"`
-	Trunks             string `json:"trunks"`
-	Type               string `json:"type"`
-	Useoverride        string `json:"useoverride"`
+	Name               string         `json:"name"`
+	Contractdbid       string         `json:"contractdbid"`
+	Dbid               string         `json:"dbid"`
+	Folderid           string         `json:"folderid"`
+	Groupdbid          string         `json:"groupdbid"`
+	Loginflag          string         `json:"loginflag"`
+	Number             string         `json:"number"`
+	Registerall        string         `json:"registerall"`
+	Routetype          string         `json:"routetype"`
+	Sitedbid           string         `json:"sitedbid"`
+	State              string         `json:"state"`
+	Subtype            string         `json:"subtype"`
+	Switchdbid         string         `json:"switchdbid"`
+	Switchspecifictype string         `json:"switchspecifictype"`
+	Tenantdbid         string         `json:"tenantdbid"`
+	Trunks             string         `json:"trunks"`
+	Type               string         `json:"type"`
+	Useoverride        string         `json:"useoverride"`
+	Userproperties     Userproperties `json:"userproperties,omitempty"`
 }
 
 //CfgDNGroup represent a group of DN object
