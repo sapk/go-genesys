@@ -111,6 +111,7 @@ type CfgFolder struct {
 	Ownertype   string `json:"ownertype"`
 	Dbid        string `json:"dbid"`
 	Ownerdbid   string `json:"ownerdbid"`
+	Folderid    string `json:"folderid"`
 	Name        string `json:"name"`
 	Resources   struct {
 		Resource []interface{} `json:"resource"` //TODO
