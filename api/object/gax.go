@@ -360,3 +360,33 @@ type CfgApplication struct {
 	Appprototypedbid string `json:"appprototypedbid"`
 	Port             string `json:"port,omitempty"`
 }
+
+//GetOptionValue return option value or default if not found
+func (a *CfgApplication) GetOptionValue(section, key, defaultValue string) string {
+	for _, ap := range a.Options.Property {
+		if ap.Section == section && ap.Key == key {
+			return ap.Value
+		}
+	}
+	//If not found return default value
+	return defaultValue
+}
+
+//SetOptions update or create multiple option passed as arg
+func (a *CfgApplication) SetOptions(optList ...Property) {
+	for _, o := range optList {
+		a.SetOption(o)
+	}
+}
+
+//SetOption update or create option passed as arg
+func (a *CfgApplication) SetOption(o Property) {
+	for i, ap := range a.Options.Property {
+		if ap.Section == o.Section && ap.Key == o.Key {
+			a.Options.Property[i] = o
+			return
+		}
+	}
+	//If not found append
+	a.Options.Property = append(a.Options.Property, o)
+}
