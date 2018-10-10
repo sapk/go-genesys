@@ -191,14 +191,15 @@ type CfgDNGroup struct {
 			Trunks string `json:"trunks"`
 		} `json:"dninfo"`
 	} `json:"dns"`
-	Folderid       string `json:"folderid"`
-	Name           string `json:"name"`
-	Quotatabledbid string `json:"quotatabledbid"`
-	Sitedbid       string `json:"sitedbid"`
-	State          string `json:"state"`
-	Subtype        string `json:"subtype"`
-	Tenantdbid     string `json:"tenantdbid"`
-	Type           string `json:"type"`
+	Folderid       string         `json:"folderid"`
+	Name           string         `json:"name"`
+	Quotatabledbid string         `json:"quotatabledbid"`
+	Sitedbid       string         `json:"sitedbid"`
+	State          string         `json:"state"`
+	Subtype        string         `json:"subtype"`
+	Tenantdbid     string         `json:"tenantdbid"`
+	Type           string         `json:"type"`
+	Userproperties Userproperties `json:"userproperties,omitempty"`
 }
 
 //CfgDBIDList represent a generic list of dbid link
