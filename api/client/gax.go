@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/sapk/go-genesys/api/object"
 )
@@ -53,7 +54,12 @@ func (c *Client) ListObject(objType string, v interface{}) (*http.Response, erro
 	if err != nil {
 		return nil, err
 	}
-	req.URL.RawQuery = "brief=false&type=" + objType
+	//req.URL.RawQuery = "brief=false&type=" + objType
+	parameters := url.Values{}
+	parameters.Add("brief", "false")
+	parameters.Add("type", objType)
+	req.URL.RawQuery = parameters.Encode()
+
 	return c.do(req, v)
 }
 
@@ -72,7 +78,13 @@ func (c *Client) GetObjectByName(objType, objName string) (map[string]interface{
 	if err != nil {
 		return nil, nil, err
 	}
-	req.URL.RawQuery = "brief=false&type=" + objType + "&name=" + objName
+
+	//req.URL.RawQuery = "brief=false&type=" + objType + "&name=" + objName
+	parameters := url.Values{}
+	parameters.Add("brief", "false")
+	parameters.Add("type", objType)
+	parameters.Add("name", objName)
+	req.URL.RawQuery = parameters.Encode()
 
 	var objList []map[string]interface{}
 	resp, err := c.do(req, &objList)
