@@ -300,24 +300,30 @@ type Property struct {
 	Key     string `json:"key"`
 }
 
+//Appservers generic app server list
+type Appservers struct {
+	Conninfo []Conninfo `json:"conninfo,omitempty"`
+}
+
+//Conninfo generic app server connection definition
+type Conninfo struct {
+	Mode          string `json:"mode"`
+	Appserverdbid string `json:"appserverdbid"`
+	Timoutlocal   string `json:"timoutlocal"`
+	Longfield1    string `json:"longfield1"`
+	Longfield2    string `json:"longfield2"`
+	Longfield3    string `json:"longfield3"`
+	Longfield4    string `json:"longfield4"`
+	Timoutremote  string `json:"timoutremote"`
+	ID            string `json:"id"`
+}
+
 //CfgApplication represent an application definition
 type CfgApplication struct {
-	Dbid       string `json:"dbid,omitempty"`
-	Name       string `json:"name"`
-	Type       string `json:"type"`
-	Appservers struct {
-		Conninfo []struct {
-			Mode          string `json:"mode"`
-			Appserverdbid string `json:"appserverdbid"`
-			Timoutlocal   string `json:"timoutlocal"`
-			Longfield1    string `json:"longfield1"`
-			Longfield2    string `json:"longfield2"`
-			Longfield3    string `json:"longfield3"`
-			Longfield4    string `json:"longfield4"`
-			Timoutremote  string `json:"timoutremote"`
-			ID            string `json:"id"`
-		} `json:"conninfo,omitempty"`
-	} `json:"appservers,omitempty"`
+	Dbid                 string         `json:"dbid,omitempty"`
+	Name                 string         `json:"name"`
+	Type                 string         `json:"type"`
+	Appservers           Appservers     `json:"appservers,omitempty"`
 	Autorestart          string         `json:"autorestart,omitempty"`
 	Userproperties       Userproperties `json:"userproperties,omitempty"`
 	Timeout              string         `json:"timeout,omitempty"`
