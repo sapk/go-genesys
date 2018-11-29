@@ -103,7 +103,7 @@ func (c *Client) GetObjectByProp(objType, objProp, objPropName string) (map[stri
 
 //GetObjectByName retrieve object with an name and a type
 func (c *Client) GetObjectByName(objType, objName string) (map[string]interface{}, *http.Response, error) {
-	return GetObjectByProp(objType, "name", objName)
+	return c.GetObjectByProp(objType, "name", objName)
 }
 
 //TODO http://host:8080/gax/api/cfg/tree/CfgApplication/104/path
