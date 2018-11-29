@@ -8,7 +8,7 @@ import (
 
 	"github.com/sapk/go-genesys/api/object"
 )
-
+	
 //ListDN list all DN
 func (c *Client) ListDN() ([]object.CfgDN, error) {
 	var apps []object.CfgDN
@@ -146,6 +146,34 @@ func (c *Client) GetHostByName(name string) (*object.CfgHost, error) {
 func (c *Client) GetHostByID(id string) (*object.CfgHost, error) {
 	var obj object.CfgHost
 	_, err := c.GetObjectByID("CfgHost", id, &obj)
+	return &obj, err
+}
+
+//ListAgentLogin list all Agent Login
+func (c *Client) ListAgentLogin() ([]object.CfgAgentLogin, error) {
+	var apps []object.CfgAgentLogin
+	_, err := c.ListObject("CfgAgentLogin", &apps)
+	return apps, err
+}
+
+//GetAgentLoginByName retrieve a specific Agent Login by name
+func (c *Client) GetAgentLoginByName(name string) (*object.CfgAgentLogin, error) {
+	var obj object.CfgAgentLogin
+	o, _, err := c.GetObjectByName("CfgAgentLogin", name)
+	if err != nil {
+		return nil, err
+	}
+	err = mapstructure.Decode(o, &obj) //TODO find a better way because mapstructure can use reflect under the hood
+	if err != nil {
+		return nil, err
+	}
+	return &obj, nil
+}
+
+//GetAgentLoginByID retrieve a specific Agent Login by id
+func (c *Client) GetAgentLoginByID(id string) (*object.CfgAgentLogin, error) {
+	var obj object.CfgAgentLogin
+	_, err := c.GetObjectByID("CfgAgentLogin", id, &obj)
 	return &obj, err
 }
 

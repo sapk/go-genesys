@@ -25,6 +25,7 @@ var TypeListDefined = []Type{
 	Type{5, "CfgAgentGroup", "Agent Group", true},
 	Type{9, "CfgApplication", "Application", true},
 	Type{10, "CfgHost", "Host", true},
+	Type{15, "CfgAgentLogin", "Agent Login", true},
 	Type{17, "CfgDNGroup", "DN Group", true},
 	Type{20, "CfgAppPrototype", "Application Template", true},
 	Type{21, "CfgAccessGroup", "Access Group", true},
@@ -248,8 +249,28 @@ type CfgAgentGroup struct {
 	Type           string `json:"type"`
 }
 
+//CfgAgentLogin represent a agent login
+type CfgAgentLogin struct {
+	Dbid               string         `json:"dbid"`
+	Folderid           string         `json:"folderid"`
+	Logincode          string         `json:"logincode"`
+	State              string         `json:"state"`
+	Switchdbid         string         `json:"switchdbid"`
+	Switchspecifictype string         `json:"switchspecifictype"`
+	Tenantdbid         string         `json:"tenantdbid"`
+	Type               string         `json:"type"`
+	Useoverride        string         `json:"useoverride"`
+	Userproperties     Userproperties `json:"userproperties"`
+}
+
 //CfgPerson represent a person
 type CfgPerson struct {
+	AgentLogins struct {
+		Agentlogininfo []struct {
+			Agentlogindbid string `json:"agentlogindbid"`
+			Wrapuptime     string `json:"wrapuptime"`
+		} `json:"agentlogininfo"`
+	} `json:"agentlogins"`
 	Appranks struct {
 		Apprank []interface{} `json:"apprank"`
 	} `json:"appranks"`
