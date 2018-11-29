@@ -72,18 +72,18 @@ func (c *Client) GetObjectByID(objType, objID string, v interface{}) (*http.Resp
 	return c.do(req, v)
 }
 
-//GetObjectByName retrieve object with an name and a type
-func (c *Client) GetObjectByName(objType, objName string) (map[string]interface{}, *http.Response, error) {
+//GetObjectByProp retrieve object with an name and a type
+func (c *Client) GetObjectByProp(objType, objProp, objPropName string) (map[string]interface{}, *http.Response, error) {
 	req, err := c.newRequest("GET", "cfg/objects", nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	//req.URL.RawQuery = "brief=false&type=" + objType + "&name=" + objName
+	//req.URL.RawQuery = "brief=false&type=" + objType + "&name=" + objPropName
 	parameters := url.Values{}
 	parameters.Add("brief", "false")
 	parameters.Add("type", objType)
-	parameters.Add("name", objName)
+	parameters.Add(objProp, objPropName)
 	req.URL.RawQuery = parameters.Encode()
 
 	var objList []map[string]interface{}
@@ -99,6 +99,11 @@ func (c *Client) GetObjectByName(objType, objName string) (map[string]interface{
 		return objList[0], resp, errors.New("Multiple object matched")
 	}
 	return objList[0], resp, nil
+}
+
+//GetObjectByName retrieve object with an name and a type
+func (c *Client) GetObjectByName(objType, objName string) (map[string]interface{}, *http.Response, error) {
+	return GetObjectByProp(objType, "name", objName)
 }
 
 //TODO http://host:8080/gax/api/cfg/tree/CfgApplication/104/path

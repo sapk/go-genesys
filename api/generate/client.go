@@ -36,6 +36,34 @@ func (c *Client) List` + strings.TrimPrefix(o.Name, "Cfg") + `() ([]object.` + o
 	return apps, err
 }
 
+//Get` + strings.TrimPrefix(o.Name, "Cfg") + `ByID retrieve a specific ` + o.Desc + ` by id
+func (c *Client) Get` + strings.TrimPrefix(o.Name, "Cfg") + `ByID(id string) (*object.` + o.Name + `, error) {
+	var obj object.` + o.Name + `
+	_, err := c.GetObjectByID("` + o.Name + `", id, &obj)
+	return &obj, err
+}
+`
+
+		if o.Name == "CfgAgentLogin" {
+			str += `
+
+//Get` + strings.TrimPrefix(o.Name, "Cfg") + `ByName retrieve a specific ` + o.Desc + ` by name
+func (c *Client) Get` + strings.TrimPrefix(o.Name, "Cfg") + `ByName(name string) (*object.` + o.Name + `, error) {
+	var obj object.` + o.Name + `
+	o, _, err := c.GetObjectByProp("` + o.Name + `", "logincode", name)
+	if err != nil {
+		return nil, err
+	}
+	err = mapstructure.Decode(o, &obj) //TODO find a better way because mapstructure can use reflect under the hood
+	if err != nil {
+		return nil, err
+	}
+	return &obj, nil
+}
+`
+		} else {
+			str += `
+
 //Get` + strings.TrimPrefix(o.Name, "Cfg") + `ByName retrieve a specific ` + o.Desc + ` by name
 func (c *Client) Get` + strings.TrimPrefix(o.Name, "Cfg") + `ByName(name string) (*object.` + o.Name + `, error) {
 	var obj object.` + o.Name + `
@@ -49,14 +77,8 @@ func (c *Client) Get` + strings.TrimPrefix(o.Name, "Cfg") + `ByName(name string)
 	}
 	return &obj, nil
 }
-
-//Get` + strings.TrimPrefix(o.Name, "Cfg") + `ByID retrieve a specific ` + o.Desc + ` by id
-func (c *Client) Get` + strings.TrimPrefix(o.Name, "Cfg") + `ByID(id string) (*object.` + o.Name + `, error) {
-	var obj object.` + o.Name + `
-	_, err := c.GetObjectByID("` + o.Name + `", id, &obj)
-	return &obj, err
-}
 `
+		}
 	}
 
 	err := ioutil.WriteFile("gax_generated.go", []byte(str), 0644)

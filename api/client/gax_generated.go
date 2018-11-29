@@ -16,6 +16,14 @@ func (c *Client) ListDN() ([]object.CfgDN, error) {
 	return apps, err
 }
 
+//GetDNByID retrieve a specific DN by id
+func (c *Client) GetDNByID(id string) (*object.CfgDN, error) {
+	var obj object.CfgDN
+	_, err := c.GetObjectByID("CfgDN", id, &obj)
+	return &obj, err
+}
+
+
 //GetDNByName retrieve a specific DN by name
 func (c *Client) GetDNByName(name string) (*object.CfgDN, error) {
 	var obj object.CfgDN
@@ -30,19 +38,20 @@ func (c *Client) GetDNByName(name string) (*object.CfgDN, error) {
 	return &obj, nil
 }
 
-//GetDNByID retrieve a specific DN by id
-func (c *Client) GetDNByID(id string) (*object.CfgDN, error) {
-	var obj object.CfgDN
-	_, err := c.GetObjectByID("CfgDN", id, &obj)
-	return &obj, err
-}
-
 //ListPerson list all Person
 func (c *Client) ListPerson() ([]object.CfgPerson, error) {
 	var apps []object.CfgPerson
 	_, err := c.ListObject("CfgPerson", &apps)
 	return apps, err
 }
+
+//GetPersonByID retrieve a specific Person by id
+func (c *Client) GetPersonByID(id string) (*object.CfgPerson, error) {
+	var obj object.CfgPerson
+	_, err := c.GetObjectByID("CfgPerson", id, &obj)
+	return &obj, err
+}
+
 
 //GetPersonByName retrieve a specific Person by name
 func (c *Client) GetPersonByName(name string) (*object.CfgPerson, error) {
@@ -58,19 +67,20 @@ func (c *Client) GetPersonByName(name string) (*object.CfgPerson, error) {
 	return &obj, nil
 }
 
-//GetPersonByID retrieve a specific Person by id
-func (c *Client) GetPersonByID(id string) (*object.CfgPerson, error) {
-	var obj object.CfgPerson
-	_, err := c.GetObjectByID("CfgPerson", id, &obj)
-	return &obj, err
-}
-
 //ListAgentGroup list all Agent Group
 func (c *Client) ListAgentGroup() ([]object.CfgAgentGroup, error) {
 	var apps []object.CfgAgentGroup
 	_, err := c.ListObject("CfgAgentGroup", &apps)
 	return apps, err
 }
+
+//GetAgentGroupByID retrieve a specific Agent Group by id
+func (c *Client) GetAgentGroupByID(id string) (*object.CfgAgentGroup, error) {
+	var obj object.CfgAgentGroup
+	_, err := c.GetObjectByID("CfgAgentGroup", id, &obj)
+	return &obj, err
+}
+
 
 //GetAgentGroupByName retrieve a specific Agent Group by name
 func (c *Client) GetAgentGroupByName(name string) (*object.CfgAgentGroup, error) {
@@ -86,19 +96,20 @@ func (c *Client) GetAgentGroupByName(name string) (*object.CfgAgentGroup, error)
 	return &obj, nil
 }
 
-//GetAgentGroupByID retrieve a specific Agent Group by id
-func (c *Client) GetAgentGroupByID(id string) (*object.CfgAgentGroup, error) {
-	var obj object.CfgAgentGroup
-	_, err := c.GetObjectByID("CfgAgentGroup", id, &obj)
-	return &obj, err
-}
-
 //ListApplication list all Application
 func (c *Client) ListApplication() ([]object.CfgApplication, error) {
 	var apps []object.CfgApplication
 	_, err := c.ListObject("CfgApplication", &apps)
 	return apps, err
 }
+
+//GetApplicationByID retrieve a specific Application by id
+func (c *Client) GetApplicationByID(id string) (*object.CfgApplication, error) {
+	var obj object.CfgApplication
+	_, err := c.GetObjectByID("CfgApplication", id, &obj)
+	return &obj, err
+}
+
 
 //GetApplicationByName retrieve a specific Application by name
 func (c *Client) GetApplicationByName(name string) (*object.CfgApplication, error) {
@@ -114,19 +125,20 @@ func (c *Client) GetApplicationByName(name string) (*object.CfgApplication, erro
 	return &obj, nil
 }
 
-//GetApplicationByID retrieve a specific Application by id
-func (c *Client) GetApplicationByID(id string) (*object.CfgApplication, error) {
-	var obj object.CfgApplication
-	_, err := c.GetObjectByID("CfgApplication", id, &obj)
-	return &obj, err
-}
-
 //ListHost list all Host
 func (c *Client) ListHost() ([]object.CfgHost, error) {
 	var apps []object.CfgHost
 	_, err := c.ListObject("CfgHost", &apps)
 	return apps, err
 }
+
+//GetHostByID retrieve a specific Host by id
+func (c *Client) GetHostByID(id string) (*object.CfgHost, error) {
+	var obj object.CfgHost
+	_, err := c.GetObjectByID("CfgHost", id, &obj)
+	return &obj, err
+}
+
 
 //GetHostByName retrieve a specific Host by name
 func (c *Client) GetHostByName(name string) (*object.CfgHost, error) {
@@ -142,13 +154,6 @@ func (c *Client) GetHostByName(name string) (*object.CfgHost, error) {
 	return &obj, nil
 }
 
-//GetHostByID retrieve a specific Host by id
-func (c *Client) GetHostByID(id string) (*object.CfgHost, error) {
-	var obj object.CfgHost
-	_, err := c.GetObjectByID("CfgHost", id, &obj)
-	return &obj, err
-}
-
 //ListAgentLogin list all Agent Login
 func (c *Client) ListAgentLogin() ([]object.CfgAgentLogin, error) {
 	var apps []object.CfgAgentLogin
@@ -156,10 +161,18 @@ func (c *Client) ListAgentLogin() ([]object.CfgAgentLogin, error) {
 	return apps, err
 }
 
+//GetAgentLoginByID retrieve a specific Agent Login by id
+func (c *Client) GetAgentLoginByID(id string) (*object.CfgAgentLogin, error) {
+	var obj object.CfgAgentLogin
+	_, err := c.GetObjectByID("CfgAgentLogin", id, &obj)
+	return &obj, err
+}
+
+
 //GetAgentLoginByName retrieve a specific Agent Login by name
 func (c *Client) GetAgentLoginByName(name string) (*object.CfgAgentLogin, error) {
 	var obj object.CfgAgentLogin
-	o, _, err := c.GetObjectByName("CfgAgentLogin", name)
+	o, _, err := c.GetObjectByProp("CfgAgentLogin", "logincode", name)
 	if err != nil {
 		return nil, err
 	}
@@ -170,19 +183,20 @@ func (c *Client) GetAgentLoginByName(name string) (*object.CfgAgentLogin, error)
 	return &obj, nil
 }
 
-//GetAgentLoginByID retrieve a specific Agent Login by id
-func (c *Client) GetAgentLoginByID(id string) (*object.CfgAgentLogin, error) {
-	var obj object.CfgAgentLogin
-	_, err := c.GetObjectByID("CfgAgentLogin", id, &obj)
-	return &obj, err
-}
-
 //ListDNGroup list all DN Group
 func (c *Client) ListDNGroup() ([]object.CfgDNGroup, error) {
 	var apps []object.CfgDNGroup
 	_, err := c.ListObject("CfgDNGroup", &apps)
 	return apps, err
 }
+
+//GetDNGroupByID retrieve a specific DN Group by id
+func (c *Client) GetDNGroupByID(id string) (*object.CfgDNGroup, error) {
+	var obj object.CfgDNGroup
+	_, err := c.GetObjectByID("CfgDNGroup", id, &obj)
+	return &obj, err
+}
+
 
 //GetDNGroupByName retrieve a specific DN Group by name
 func (c *Client) GetDNGroupByName(name string) (*object.CfgDNGroup, error) {
@@ -198,19 +212,20 @@ func (c *Client) GetDNGroupByName(name string) (*object.CfgDNGroup, error) {
 	return &obj, nil
 }
 
-//GetDNGroupByID retrieve a specific DN Group by id
-func (c *Client) GetDNGroupByID(id string) (*object.CfgDNGroup, error) {
-	var obj object.CfgDNGroup
-	_, err := c.GetObjectByID("CfgDNGroup", id, &obj)
-	return &obj, err
-}
-
 //ListAppPrototype list all Application Template
 func (c *Client) ListAppPrototype() ([]object.CfgAppPrototype, error) {
 	var apps []object.CfgAppPrototype
 	_, err := c.ListObject("CfgAppPrototype", &apps)
 	return apps, err
 }
+
+//GetAppPrototypeByID retrieve a specific Application Template by id
+func (c *Client) GetAppPrototypeByID(id string) (*object.CfgAppPrototype, error) {
+	var obj object.CfgAppPrototype
+	_, err := c.GetObjectByID("CfgAppPrototype", id, &obj)
+	return &obj, err
+}
+
 
 //GetAppPrototypeByName retrieve a specific Application Template by name
 func (c *Client) GetAppPrototypeByName(name string) (*object.CfgAppPrototype, error) {
@@ -226,19 +241,20 @@ func (c *Client) GetAppPrototypeByName(name string) (*object.CfgAppPrototype, er
 	return &obj, nil
 }
 
-//GetAppPrototypeByID retrieve a specific Application Template by id
-func (c *Client) GetAppPrototypeByID(id string) (*object.CfgAppPrototype, error) {
-	var obj object.CfgAppPrototype
-	_, err := c.GetObjectByID("CfgAppPrototype", id, &obj)
-	return &obj, err
-}
-
 //ListAccessGroup list all Access Group
 func (c *Client) ListAccessGroup() ([]object.CfgAccessGroup, error) {
 	var apps []object.CfgAccessGroup
 	_, err := c.ListObject("CfgAccessGroup", &apps)
 	return apps, err
 }
+
+//GetAccessGroupByID retrieve a specific Access Group by id
+func (c *Client) GetAccessGroupByID(id string) (*object.CfgAccessGroup, error) {
+	var obj object.CfgAccessGroup
+	_, err := c.GetObjectByID("CfgAccessGroup", id, &obj)
+	return &obj, err
+}
+
 
 //GetAccessGroupByName retrieve a specific Access Group by name
 func (c *Client) GetAccessGroupByName(name string) (*object.CfgAccessGroup, error) {
@@ -254,19 +270,20 @@ func (c *Client) GetAccessGroupByName(name string) (*object.CfgAccessGroup, erro
 	return &obj, nil
 }
 
-//GetAccessGroupByID retrieve a specific Access Group by id
-func (c *Client) GetAccessGroupByID(id string) (*object.CfgAccessGroup, error) {
-	var obj object.CfgAccessGroup
-	_, err := c.GetObjectByID("CfgAccessGroup", id, &obj)
-	return &obj, err
-}
-
 //ListFolder list all Folder
 func (c *Client) ListFolder() ([]object.CfgFolder, error) {
 	var apps []object.CfgFolder
 	_, err := c.ListObject("CfgFolder", &apps)
 	return apps, err
 }
+
+//GetFolderByID retrieve a specific Folder by id
+func (c *Client) GetFolderByID(id string) (*object.CfgFolder, error) {
+	var obj object.CfgFolder
+	_, err := c.GetObjectByID("CfgFolder", id, &obj)
+	return &obj, err
+}
+
 
 //GetFolderByName retrieve a specific Folder by name
 func (c *Client) GetFolderByName(name string) (*object.CfgFolder, error) {
@@ -280,11 +297,4 @@ func (c *Client) GetFolderByName(name string) (*object.CfgFolder, error) {
 		return nil, err
 	}
 	return &obj, nil
-}
-
-//GetFolderByID retrieve a specific Folder by id
-func (c *Client) GetFolderByID(id string) (*object.CfgFolder, error) {
-	var obj object.CfgFolder
-	_, err := c.GetObjectByID("CfgFolder", id, &obj)
-	return &obj, err
 }
