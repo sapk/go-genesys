@@ -8,7 +8,7 @@ import (
 
 	"github.com/sapk/go-genesys/api/object"
 )
-	
+
 //ListDN list all DN
 func (c *Client) ListDN() ([]object.CfgDN, error) {
 	var apps []object.CfgDN
@@ -22,7 +22,6 @@ func (c *Client) GetDNByID(id string) (*object.CfgDN, error) {
 	_, err := c.GetObjectByID("CfgDN", id, &obj)
 	return &obj, err
 }
-
 
 //GetDNByName retrieve a specific DN by name
 func (c *Client) GetDNByName(name string) (*object.CfgDN, error) {
@@ -52,7 +51,6 @@ func (c *Client) GetPersonByID(id string) (*object.CfgPerson, error) {
 	return &obj, err
 }
 
-
 //GetPersonByName retrieve a specific Person by name
 func (c *Client) GetPersonByName(name string) (*object.CfgPerson, error) {
 	var obj object.CfgPerson
@@ -80,7 +78,6 @@ func (c *Client) GetAgentGroupByID(id string) (*object.CfgAgentGroup, error) {
 	_, err := c.GetObjectByID("CfgAgentGroup", id, &obj)
 	return &obj, err
 }
-
 
 //GetAgentGroupByName retrieve a specific Agent Group by name
 func (c *Client) GetAgentGroupByName(name string) (*object.CfgAgentGroup, error) {
@@ -110,7 +107,6 @@ func (c *Client) GetApplicationByID(id string) (*object.CfgApplication, error) {
 	return &obj, err
 }
 
-
 //GetApplicationByName retrieve a specific Application by name
 func (c *Client) GetApplicationByName(name string) (*object.CfgApplication, error) {
 	var obj object.CfgApplication
@@ -138,7 +134,6 @@ func (c *Client) GetHostByID(id string) (*object.CfgHost, error) {
 	_, err := c.GetObjectByID("CfgHost", id, &obj)
 	return &obj, err
 }
-
 
 //GetHostByName retrieve a specific Host by name
 func (c *Client) GetHostByName(name string) (*object.CfgHost, error) {
@@ -168,7 +163,6 @@ func (c *Client) GetAgentLoginByID(id string) (*object.CfgAgentLogin, error) {
 	return &obj, err
 }
 
-
 //GetAgentLoginByName retrieve a specific Agent Login by name
 func (c *Client) GetAgentLoginByName(name string) (*object.CfgAgentLogin, error) {
 	var obj object.CfgAgentLogin
@@ -196,7 +190,6 @@ func (c *Client) GetDNGroupByID(id string) (*object.CfgDNGroup, error) {
 	_, err := c.GetObjectByID("CfgDNGroup", id, &obj)
 	return &obj, err
 }
-
 
 //GetDNGroupByName retrieve a specific DN Group by name
 func (c *Client) GetDNGroupByName(name string) (*object.CfgDNGroup, error) {
@@ -226,7 +219,6 @@ func (c *Client) GetAppPrototypeByID(id string) (*object.CfgAppPrototype, error)
 	return &obj, err
 }
 
-
 //GetAppPrototypeByName retrieve a specific Application Template by name
 func (c *Client) GetAppPrototypeByName(name string) (*object.CfgAppPrototype, error) {
 	var obj object.CfgAppPrototype
@@ -255,7 +247,6 @@ func (c *Client) GetAccessGroupByID(id string) (*object.CfgAccessGroup, error) {
 	return &obj, err
 }
 
-
 //GetAccessGroupByName retrieve a specific Access Group by name
 func (c *Client) GetAccessGroupByName(name string) (*object.CfgAccessGroup, error) {
 	var obj object.CfgAccessGroup
@@ -283,7 +274,6 @@ func (c *Client) GetFolderByID(id string) (*object.CfgFolder, error) {
 	_, err := c.GetObjectByID("CfgFolder", id, &obj)
 	return &obj, err
 }
-
 
 //GetFolderByName retrieve a specific Folder by name
 func (c *Client) GetFolderByName(name string) (*object.CfgFolder, error) {

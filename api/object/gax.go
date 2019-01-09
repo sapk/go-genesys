@@ -418,3 +418,36 @@ func (a *CfgApplication) SetOption(o Property) {
 	//If not found append
 	a.Options.Property = append(a.Options.Property, o)
 }
+
+//SetAnnex Modify or add an annex
+func (props *Userproperties) SetAnnex(newOpt Property) {
+	for i, p := range props.Property {
+		if newOpt.Section == p.Section && newOpt.Key == p.Key {
+			props.Property[i] = newOpt
+			return //End here
+		}
+	}
+	//If not found append
+	props.Property = append(props.Property, newOpt)
+}
+
+//GetAnnex Search an annex by Section and Key of param
+func (props *Userproperties) GetAnnex(searchP Property) *Property {
+	for _, p := range props.Property {
+		if searchP.Section == p.Section && searchP.Key == p.Key {
+			return &p
+		}
+	}
+	//If not found
+	return nil
+}
+
+//Contains Search if an annex with exact Section, Key and Value of param
+func (props *Userproperties) Contains(searchP Property) bool {
+	p := props.GetAnnex(searchP)
+	if p == nil {
+		//If not found
+		return false
+	}
+	return p.Value == searchP.Value
+}
