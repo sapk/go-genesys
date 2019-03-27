@@ -44,4 +44,15 @@ func NewDB(dbType, host, user, pass, base string) (*DB, error) {
 		return nil, fmt.Errorf("Invalid db type")
 	}
 	t, u, err := dbHandlerStringer.(handler).GenerateURL(host, user, pass, base)
+	if err != nil {
+		return nil, err
+	}
+
+	e, err := initConn(t, u)
+	if err != nil {
+		return nil, err
+	}
+	return &DB{
+		Engine: e,
+	}, nil
 }
