@@ -28,6 +28,16 @@ func initConn(t, s string) (*xorm.Engine, error) {
 	return engine, engine.Ping()
 }
 
+//SupportedTypes list suported db handler
+func SupportedTypes() []string {
+	dbTypeEntryArr := make([]string, 0)
+	handlerMap.Range(func(key, value interface{}) bool {
+		dbTypeEntryArr = append(dbTypeEntryArr, key.(string))
+		return true
+	})
+	return dbTypeEntryArr
+}
+
 //DB contain the DB
 type DB struct {
 	//Engine contane the connection to the Database
