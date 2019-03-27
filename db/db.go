@@ -25,6 +25,7 @@ func initConn(t, s string) (*xorm.Engine, error) {
 	}
 	//engine.SetLogger(generateSQLLogger())
 	//engine.ShowSQL(true)
+	engine.ShowSQL(false)
 	return engine, engine.Ping()
 }
 

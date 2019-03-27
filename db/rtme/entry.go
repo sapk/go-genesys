@@ -203,8 +203,8 @@ func LoginEventByUserToSession(start, end time.Time, loginEventsByUser map[strin
 }
 
 //GetGraphEntriesOfDay calculate graph entry
-func GetGraphEntriesOfDay(day string) ([]GraphEntry, error) {
-	et, err := GetLoginEntriesOfDay(day)
+func GetGraphEntriesOfDay(d *db.DB, day string) ([]GraphEntry, error) {
+	et, err := GetLoginEntriesOfDay(d, day)
 	if err != nil {
 		return nil, err
 	}
