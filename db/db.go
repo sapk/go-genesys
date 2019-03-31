@@ -59,7 +59,12 @@ func NewDB(dbType, host, user, pass, base string) (*DB, error) {
 		return nil, err
 	}
 
-	e, err := initConn(t, u)
+	return NewDBFromURL(t, u)
+}
+
+//NewDBFromURL create DB object from a specific url
+func NewDBFromURL(dbType, dbURL string) (*DB, error) {
+	e, err := initConn(dbType, dbURL)
 	if err != nil {
 		return nil, err
 	}
