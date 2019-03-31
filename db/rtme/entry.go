@@ -81,16 +81,16 @@ func GetQInfoEntriesOfDay(d *db.DB, day string) ([]QueueEntry, error) {
 
 //StatusEntry a db STATUS entry
 type StatusEntry struct {
-	ID             int    `xorm:"'ID'"`
-	AgentDBID      int    `xorm:"'AgentDBID'"`
-	PlaceDBID      int    `xorm:"'PlaceDBID'"`
-	Status         int    `xorm:"'Status'"`
-	StartTime      int    `xorm:"'StartTime'"`
-	Duration       int    `xorm:"'Duration'"`
-	EndTime        int    `xorm:"'EndTime'"`
-	ConnID         int    `xorm:"decimal(20,0) 'ConnID'"`
-	StartLocalTime string `xorm:"varchar(50) null 'StartLocalTime'"`
-	EndLocalTime   string `xorm:"varchar(50) null 'EndLocalTime'"`
+	ID        int `xorm:"'ID'"`
+	AgentDBID int `xorm:"'AgentDBID'"`
+	PlaceDBID int `xorm:"'PlaceDBID'"`
+	Status    int `xorm:"'Status'"`
+	StartTime int `xorm:"'StartTime'"`
+	Duration  int `xorm:"'Duration'"`
+	EndTime   int `xorm:"'EndTime'"`
+	ConnID    int `xorm:"decimal(20,0) 'ConnID'"`
+	//Not mandatory StartLocalTime string `xorm:"varchar(50) null 'StartLocalTime'"`
+	//Not mandatory EndLocalTime   string `xorm:"varchar(50) null 'EndLocalTime'"`
 }
 
 //TableName in database
@@ -115,8 +115,8 @@ type GraphEntry struct {
 	Sessions []Session
 }
 
-//Event a user event
-type Event struct {
+//LoginEvent a user login event
+type LoginEvent struct {
 	State int
 	Place int
 	Time  int64
@@ -130,18 +130,18 @@ type Session struct {
 }
 
 //LoginToEventByUser regroup by user
-func LoginToEventByUser(loginEntries []LoginEntry) (map[string][]Event, map[string]int) {
-	byUser := make(map[string][]Event)
+func LoginToEventByUser(loginEntries []LoginEntry) (map[string][]LoginEvent, map[string]int) {
+	byUser := make(map[string][]LoginEvent)
 	userIDList := make(map[string]int)
 	for _, e := range loginEntries {
 		if e.LOGINID == "" {
 			continue //Skip undefined
 		}
 		if _, ok := byUser[e.LOGINID]; !ok {
-			byUser[e.LOGINID] = make([]Event, 0) //init user
-			userIDList[e.LOGINID] = e.AGENTDBID  //Save dbids
+			byUser[e.LOGINID] = make([]LoginEvent, 0) //init user
+			userIDList[e.LOGINID] = e.AGENTDBID       //Save dbids
 		}
-		byUser[e.LOGINID] = append(byUser[e.LOGINID], Event{
+		byUser[e.LOGINID] = append(byUser[e.LOGINID], LoginEvent{
 			State: e.STATUS,
 			Place: e.PLACEDBID,
 			Time:  int64(e.TIME),
@@ -151,7 +151,7 @@ func LoginToEventByUser(loginEntries []LoginEntry) (map[string][]Event, map[stri
 }
 
 //LoginEventByUserToSession regroup by user
-func LoginEventByUserToSession(start, end time.Time, loginEventsByUser map[string][]Event) map[string][]Session {
+func LoginEventByUserToSession(start, end time.Time, loginEventsByUser map[string][]LoginEvent) map[string][]Session {
 	bySession := make(map[string][]Session)
 	for user, events := range loginEventsByUser {
 		var endSession int64
@@ -226,6 +226,62 @@ func FormattedLoginEntriesOfDay(d *db.DB, day string) (*FormattedLoginResp, erro
 		End:      end.Unix(),
 		Sessions: LoginEventByUserToSession(start, end, events),
 		Users:    userList,
+	}, nil
+}
+
+//StatusEvent a status event
+type StatusEvent struct {
+	Place  int
+	Agent  int
+	Status int
+	Start  int64
+	End    int64
+}
+
+//FormattedStatusResp format the status to be used by api
+type FormattedStatusResp struct {
+	Start    int64
+	End      int64
+	Sessions []StatusEvent
+}
+
+func formatStatusEntries(start, end time.Time, entries []StatusEntry) []StatusEvent {
+	ret := make([]StatusEvent, len(entries))
+	for i, e := range entries {
+		st := time.Unix(int64(e.StartTime), 0)
+		if st.Before(start) {
+			st = start
+		}
+		en := time.Unix(int64(e.EndTime), 0)
+		if en.After(end) {
+			en = end
+		}
+		ret[i] = StatusEvent{
+			Place:  e.PlaceDBID,
+			Agent:  e.AgentDBID,
+			Status: e.Status,
+			Start:  st.Unix(),
+			End:    en.Unix(),
+		}
+	}
+	return ret
+}
+
+//FormattedStatusEntriesOfDay formatted status entry
+func FormattedStatusEntriesOfDay(d *db.DB, day string) (*FormattedStatusResp, error) {
+	et, err := GetStatusEntriesOfDay(d, day)
+	if err != nil {
+		return nil, err
+	}
+	start, end, err := parseStartEndOfDay(day)
+	if err != nil {
+		return nil, err
+	}
+
+	return &FormattedStatusResp{
+		Start:    start.Unix(),
+		End:      end.Unix(),
+		Sessions: formatStatusEntries(start, end, et),
 	}, nil
 }
 
