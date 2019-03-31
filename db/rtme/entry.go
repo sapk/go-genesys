@@ -125,14 +125,16 @@ type Session struct {
 }
 
 //LoginToEventByUser regroup by user
-func LoginToEventByUser(loginEntries []LoginEntry) map[string][]Event {
+func LoginToEventByUser(loginEntries []LoginEntry) (map[string][]Event, map[string]int) {
 	byUser := make(map[string][]Event)
+	userIDList := make(map[string]int)
 	for _, e := range loginEntries {
 		if e.LOGINID == "" {
 			continue //Skip undefined
 		}
 		if _, ok := byUser[e.LOGINID]; !ok {
 			byUser[e.LOGINID] = make([]Event, 0) //init user
+			userIDList[e.LOGINID] = e.AGENTDBID  //Save dbids
 		}
 		byUser[e.LOGINID] = append(byUser[e.LOGINID], Event{
 			State: e.STATUS,
@@ -140,11 +142,11 @@ func LoginToEventByUser(loginEntries []LoginEntry) map[string][]Event {
 			Time:  int64(e.TIME),
 		})
 	}
-	return byUser
+	return byUser, userIDList
 }
 
 //LoginEventByUserToSession regroup by user
-func LoginEventByUserToSession(start, end time.Time, loginEventsByUser map[string][]Event) []GraphEntry {
+func LoginEventByUserToSession(start, end time.Time, loginEventsByUser map[string][]Event) map[string][]Session {
 	bySession := make(map[string][]Session)
 	for user, events := range loginEventsByUser {
 		var endSession int64
@@ -189,17 +191,37 @@ func LoginEventByUserToSession(start, end time.Time, loginEventsByUser map[strin
 			})
 		}
 	}
-	//Reformat
-	i := 0
-	response := make([]GraphEntry, len(bySession))
-	for user, sessions := range bySession {
-		response[i] = GraphEntry{
-			Agent:    user,
-			Sessions: sessions,
-		}
-		i++
+	return bySession
+	/*
+	 */
+}
+
+//FormattedLoginResp format the login to be used by api
+type FormattedLoginResp struct {
+	Start    int64
+	End      int64
+	Sessions map[string][]Session
+	Users    map[string]int
+}
+
+//FormattedLoginEntriesOfDay formatted login entry
+func FormattedLoginEntriesOfDay(d *db.DB, day string) (*FormattedLoginResp, error) {
+	et, err := GetLoginEntriesOfDay(d, day)
+	if err != nil {
+		return nil, err
 	}
-	return response
+	start, end, err := parseStartEndOfDay(day)
+	if err != nil {
+		return nil, err
+	}
+
+	events, userList := LoginToEventByUser(et)
+	return &FormattedLoginResp{
+		Start:    start.Unix(),
+		End:      end.Unix(),
+		Sessions: LoginEventByUserToSession(start, end, events),
+		Users:    userList,
+	}, nil
 }
 
 //GetGraphEntriesOfDay calculate graph entry
@@ -212,26 +234,17 @@ func GetGraphEntriesOfDay(d *db.DB, day string) ([]GraphEntry, error) {
 	if err != nil {
 		return nil, err
 	}
-	return LoginEventByUserToSession(start, end, LoginToEventByUser(et)), nil
-	/*
-		var w, h int = 640, 40
-		img := ui.NewImage(640, 40)
-		imgRGBA := image.NewRGBA(image.Rect(0, 0, w, h))
-		for x := 0; x < w; x++ {
-			for y := 0; y < h; y++ {
-				c := color.RGBA{
-					0,
-					255,
-					0,
-					255,
-				}
-				imgRGBA.Set(x, y, c)
-			}
+	events, _ := LoginToEventByUser(et)
+	bySession := LoginEventByUserToSession(start, end, events)
+	//Reformat
+	i := 0
+	response := make([]GraphEntry, len(bySession))
+	for user, sessions := range bySession {
+		response[i] = GraphEntry{
+			Agent:    user,
+			Sessions: sessions,
 		}
-		img.Append(imgRGBA)
-		return []GraphEntry{
-			GraphEntry{"Test1", img},
-			GraphEntry{"Test2", img},
-		}, nil
-	*/
+		i++
+	}
+	return response, nil
 }
