@@ -240,9 +240,9 @@ type StatusEvent struct {
 
 //FormattedStatusResp format the status to be used by api
 type FormattedStatusResp struct {
-	Start    int64
-	End      int64
-	Sessions []StatusEvent
+	Start  int64
+	End    int64
+	Status []StatusEvent
 }
 
 func formatStatusEntries(start, end time.Time, entries []StatusEntry) []StatusEvent {
@@ -279,9 +279,9 @@ func FormattedStatusEntriesOfDay(d *db.DB, day string) (*FormattedStatusResp, er
 	}
 
 	return &FormattedStatusResp{
-		Start:    start.Unix(),
-		End:      end.Unix(),
-		Sessions: formatStatusEntries(start, end, et),
+		Start:  start.Unix(),
+		End:    end.Unix(),
+		Status: formatStatusEntries(start, end, et),
 	}, nil
 }
 
