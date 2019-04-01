@@ -105,7 +105,7 @@ func GetStatusEntriesOfDay(d *db.DB, day string) ([]StatusEntry, error) {
 		return nil, err
 	}
 	var entries []StatusEntry
-	err = d.Engine.Where("StartTime BETWEEN ? AND ? OR EndTime BETWEEN ? AND ? OR (StartTime < ? AND EndTime > ?)", start.Unix(), end.Unix(), start.Unix(), end.Unix(), start.Unix(), end.Unix()).OrderBy("StartTime ASC").Find(&entries)
+	err = d.Engine.Where("Status != 23 AND StartTime BETWEEN ? AND ? OR EndTime BETWEEN ? AND ? OR (StartTime < ? AND EndTime > ?)", start.Unix(), end.Unix(), start.Unix(), end.Unix(), start.Unix(), end.Unix()).OrderBy("StartTime ASC").Find(&entries)
 	return entries, err
 }
 
