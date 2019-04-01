@@ -41,7 +41,7 @@ func GetLoginEntriesOfDay(d *db.DB, day string) ([]LoginEntry, error) {
 		return nil, err
 	}
 	var entries []LoginEntry
-	err = d.Engine.Where("LOGINID != '' AND TIME BETWEEN ? AND ?", start.Unix(), end.Unix()).OrderBy("TIME ASC").Find(&entries)
+	err = d.Engine.Where("LOGINID != '' AND TIME BETWEEN ? AND ?", start.Unix(), end.Unix()).OrderBy("TIME DESC").Find(&entries)
 	for i, et := range entries {
 		//Clean LOGINID
 		entries[i].LOGINID = strings.TrimSpace(et.LOGINID)
