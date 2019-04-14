@@ -74,6 +74,15 @@ func NewDB(dbType, host, user, pass, cfg, rtme string) (*DB, error) {
 	}, nil
 }
 
+//NewDBFromURL create DB object directly from url
+func NewDBFromURL(dbType, cfgURL, rtmeURL string) *DB {
+	return &DB{
+		dbType:  dbType,
+		cfgURL:  cfgURL,
+		rtmeURL: rtmeURL,
+	}
+}
+
 //RTME handle to rtme database
 func (db *DB) RTME() (*xorm.Engine, error) {
 	if db.rtmeEngine == nil {
