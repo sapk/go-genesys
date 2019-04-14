@@ -1,10 +1,13 @@
 package rtme
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
 	"github.com/sapk/go-genesys/db"
+	"github.com/sapk/go-genesys/db/config"
+	"github.com/sapk/go-genesys/tools"
 )
 
 func parseStartEndOfDay(day string) (time.Time, time.Time, error) {
@@ -41,17 +44,17 @@ func GetLoginEntriesOfDay(d *db.DB, day string) ([]LoginEntry, error) {
 		return nil, err
 	}
 	var entries []LoginEntry
-	err = d.Engine.Where("LOGINID != '' AND TIME BETWEEN ? AND ?", start.Unix(), end.Unix()).OrderBy("TIME DESC").Find(&entries)
+	e, err := d.RTME()
+	if err != nil {
+		return nil, err
+	}
+	err = e.Where("LOGINID != '' AND TIME BETWEEN ? AND ?", start.Unix(), end.Unix()).OrderBy("TIME DESC").Find(&entries)
 	for i, et := range entries {
 		//Clean LOGINID
 		entries[i].LOGINID = strings.TrimSpace(et.LOGINID)
 	}
 	return entries, err
 }
-
-//	results, err := engine.Query(fmt.Sprintf("USE RTME; SELECT TIME, PLACEDBID, AGENTDBID, LOGINID, STATUS FROM dbo.LOGIN WHERE LOGINID != '' AND TIME BETWEEN %d AND %d  ORDER BY TIME DESC", start.Unix(), end.Unix()))
-
-//	results, err := engine.Query(fmt.Sprintf("USE RTME; SELECT AgentDBID, PlaceDBID, ConnID, Status, StartTime, EndTime FROM dbo.STATUS WHERE Status != '23' AND AgentDBID != '' AND (StartTime BETWEEN %d AND %d OR EndTime BETWEEN %d AND %d) ORDER BY StartTime ASC", start.Unix(), end.Unix(), start.Unix(), end.Unix()))
 
 //QueueEntry a db QINFO entry
 type QueueEntry struct {
@@ -75,7 +78,11 @@ func GetQInfoEntriesOfDay(d *db.DB, day string) ([]QueueEntry, error) {
 		return nil, err
 	}
 	var entries []QueueEntry
-	err = d.Engine.Where("StartTime BETWEEN ? AND ? OR EndTime BETWEEN ? AND ? OR (StartTime < ? AND EndTime > ?)", start.Unix(), end.Unix(), start.Unix(), end.Unix(), start.Unix(), end.Unix()).OrderBy("StartTime ASC").Find(&entries)
+	e, err := d.RTME()
+	if err != nil {
+		return nil, err
+	}
+	err = e.Where("StartTime BETWEEN ? AND ? OR EndTime BETWEEN ? AND ? OR (StartTime < ? AND EndTime > ?)", start.Unix(), end.Unix(), start.Unix(), end.Unix(), start.Unix(), end.Unix()).OrderBy("StartTime ASC").Find(&entries)
 	return entries, err
 }
 
@@ -105,7 +112,11 @@ func GetStatusEntriesOfDay(d *db.DB, day string) ([]StatusEntry, error) {
 		return nil, err
 	}
 	var entries []StatusEntry
-	err = d.Engine.Where("Status != 23 AND (StartTime BETWEEN ? AND ? OR EndTime BETWEEN ? AND ? OR (StartTime < ? AND EndTime > ?))", start.Unix(), end.Unix(), start.Unix(), end.Unix(), start.Unix(), end.Unix()).OrderBy("StartTime ASC").Find(&entries)
+	e, err := d.RTME()
+	if err != nil {
+		return nil, err
+	}
+	err = e.Where("Status != 23 AND (StartTime BETWEEN ? AND ? OR EndTime BETWEEN ? AND ? OR (StartTime < ? AND EndTime > ?))", start.Unix(), end.Unix(), start.Unix(), end.Unix(), start.Unix(), end.Unix()).OrderBy("StartTime ASC").Find(&entries)
 	return entries, err
 }
 
@@ -130,12 +141,15 @@ type Session struct {
 }
 
 //LoginToEventByUser regroup by user
-func LoginToEventByUser(loginEntries []LoginEntry) (map[string][]LoginEvent, map[string]int) {
+func LoginToEventByUser(loginEntries []LoginEntry, filterFunc func(int) bool) (map[string][]LoginEvent, map[string]int) {
 	byUser := make(map[string][]LoginEvent)
 	userIDList := make(map[string]int)
 	for _, e := range loginEntries {
 		if e.LOGINID == "" {
 			continue //Skip undefined
+		}
+		if filterFunc(e.AGENTDBID) {
+			continue //Skip if filtered
 		}
 		if _, ok := byUser[e.LOGINID]; !ok {
 			byUser[e.LOGINID] = make([]LoginEvent, 0) //init user
@@ -209,8 +223,17 @@ type FormattedLoginResp struct {
 	Users    map[string]int
 }
 
+func noFilter(int) bool {
+	return false
+}
+func filterByIDList(idList []int) func(int) bool {
+	return func(id int) bool {
+		return !tools.IntInSlice(id, idList)
+	}
+}
+
 //FormattedLoginEntriesOfDay formatted login entry
-func FormattedLoginEntriesOfDay(d *db.DB, day string) (*FormattedLoginResp, error) {
+func FormattedLoginEntriesOfDay(d *db.DB, day, group string) (*FormattedLoginResp, error) {
 	et, err := GetLoginEntriesOfDay(d, day)
 	if err != nil {
 		return nil, err
@@ -220,7 +243,17 @@ func FormattedLoginEntriesOfDay(d *db.DB, day string) (*FormattedLoginResp, erro
 		return nil, err
 	}
 
-	events, userList := LoginToEventByUser(et)
+	f := noFilter
+	//Filter by group
+	var agList []int
+	if group != "" { //Populate agent list
+		agList, err = config.GetAgentGroup(d, group)
+		if err != nil {
+			return nil, fmt.Errorf("Fail to get agent group info")
+		}
+		f = filterByIDList(agList)
+	}
+	events, userList := LoginToEventByUser(et, f)
 	return &FormattedLoginResp{
 		Start:    start.Unix(),
 		End:      end.Unix(),
@@ -245,9 +278,12 @@ type FormattedStatusResp struct {
 	Status []StatusEvent
 }
 
-func formatStatusEntries(start, end time.Time, entries []StatusEntry) []StatusEvent {
+func formatStatusEntries(start, end time.Time, entries []StatusEntry, filterFunc func(int) bool) []StatusEvent {
 	ret := make([]StatusEvent, len(entries))
 	for i, e := range entries {
+		if filterFunc(e.AgentDBID) {
+			continue //Skip if filtered
+		}
 		st := time.Unix(int64(e.StartTime), 0)
 		if st.Before(start) {
 			st = start
@@ -268,7 +304,7 @@ func formatStatusEntries(start, end time.Time, entries []StatusEntry) []StatusEv
 }
 
 //FormattedStatusEntriesOfDay formatted status entry
-func FormattedStatusEntriesOfDay(d *db.DB, day string) (*FormattedStatusResp, error) {
+func FormattedStatusEntriesOfDay(d *db.DB, day, group string) (*FormattedStatusResp, error) {
 	et, err := GetStatusEntriesOfDay(d, day)
 	if err != nil {
 		return nil, err
@@ -278,15 +314,26 @@ func FormattedStatusEntriesOfDay(d *db.DB, day string) (*FormattedStatusResp, er
 		return nil, err
 	}
 
+	f := noFilter
+	//Filter by group
+	var agList []int
+	if group != "" { //Populate agent list
+		agList, err = config.GetAgentGroup(d, group)
+		if err != nil {
+			return nil, fmt.Errorf("Fail to get agent group info")
+		}
+		f = filterByIDList(agList)
+	}
+
 	return &FormattedStatusResp{
 		Start:  start.Unix(),
 		End:    end.Unix(),
-		Status: formatStatusEntries(start, end, et),
+		Status: formatStatusEntries(start, end, et, f),
 	}, nil
 }
 
 //GetGraphEntriesOfDay calculate graph entry
-func GetGraphEntriesOfDay(d *db.DB, day string) ([]GraphEntry, error) {
+func GetGraphEntriesOfDay(d *db.DB, day, group string) ([]GraphEntry, error) {
 	et, err := GetLoginEntriesOfDay(d, day)
 	if err != nil {
 		return nil, err
@@ -295,7 +342,7 @@ func GetGraphEntriesOfDay(d *db.DB, day string) ([]GraphEntry, error) {
 	if err != nil {
 		return nil, err
 	}
-	events, _ := LoginToEventByUser(et)
+	events, _ := LoginToEventByUser(et, noFilter)
 	bySession := LoginEventByUserToSession(start, end, events)
 	//Reformat
 	i := 0

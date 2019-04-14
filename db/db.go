@@ -41,12 +41,16 @@ func SupportedTypes() []string {
 
 //DB contain the DB
 type DB struct {
+	dbType string
 	//Engine contane the connection to the Database
-	Engine *xorm.Engine
+	cfgEngine  *xorm.Engine
+	cfgURL     string
+	rtmeEngine *xorm.Engine
+	rtmeURL    string
 }
 
 //NewDB create DB object
-func NewDB(dbType, host, user, pass, base string) (*DB, error) {
+func NewDB(dbType, host, user, pass, cfg, rtme string) (*DB, error) {
 	if dbType == "" {
 		return nil, fmt.Errorf("Invalid db type")
 	}
@@ -54,21 +58,51 @@ func NewDB(dbType, host, user, pass, base string) (*DB, error) {
 	if !ok {
 		return nil, fmt.Errorf("Invalid db type")
 	}
-	t, u, err := dbHandlerStringer.(handler).GenerateURL(host, user, pass, base)
+	_, cu, err := dbHandlerStringer.(handler).GenerateURL(host, user, pass, cfg)
+	if err != nil {
+		return nil, err
+	}
+	_, ru, err := dbHandlerStringer.(handler).GenerateURL(host, user, pass, cfg)
 	if err != nil {
 		return nil, err
 	}
 
-	return NewDBFromURL(t, u)
+	return &DB{
+		dbType:  dbType,
+		cfgURL:  cu,
+		rtmeURL: ru,
+	}, nil
 }
 
-//NewDBFromURL create DB object from a specific url
-func NewDBFromURL(dbType, dbURL string) (*DB, error) {
+//RTME handle to rtme database
+func (db *DB) RTME() (*xorm.Engine, error) {
+	if db.rtmeEngine == nil {
+		e, err := generetaDBEngine(db.dbType, db.rtmeURL)
+		if err != nil {
+			return nil, err
+		}
+		db.rtmeEngine = e
+	}
+	return db.rtmeEngine, nil
+}
+
+//CFG handle to config database
+func (db *DB) CFG() (*xorm.Engine, error) {
+	if db.cfgEngine == nil {
+		e, err := generetaDBEngine(db.dbType, db.cfgURL)
+		if err != nil {
+			return nil, err
+		}
+		db.cfgEngine = e
+	}
+	return db.cfgEngine, nil
+}
+
+//generetaDBEngine create DB object from a specific url
+func generetaDBEngine(dbType, dbURL string) (*xorm.Engine, error) {
 	e, err := initConn(dbType, dbURL)
 	if err != nil {
 		return nil, err
 	}
-	return &DB{
-		Engine: e,
-	}, nil
+	return e, nil
 }
