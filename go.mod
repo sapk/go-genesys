@@ -1,12 +1,11 @@
 module github.com/sapk/go-genesys
 
-go 1.12
+go 1.13
 
 require (
-	cloud.google.com/go v0.37.2 // indirect
-	github.com/denisenkom/go-mssqldb v0.0.0-20190315220205-a8ed825ac853
-	github.com/go-xorm/xorm v0.7.1
+	github.com/denisenkom/go-mssqldb v0.0.0-20191001013358-cfbb681360f0
 	github.com/mitchellh/mapstructure v1.1.2
-	golang.org/x/crypto v0.0.0-20190325154230-a5d413f7728c // indirect
-	gopkg.in/yaml.v2 v2.2.2 // indirect
+	golang.org/x/crypto v0.0.0-20191029031824-8986dd9e96cf // indirect
+	google.golang.org/appengine v1.6.1 // indirect
+	xorm.io/xorm v0.8.0
 )

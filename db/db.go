@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/go-xorm/xorm"
+	"xorm.io/xorm"
 )
 
 var (
