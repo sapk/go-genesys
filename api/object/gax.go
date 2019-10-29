@@ -14,6 +14,7 @@ type Type struct {
 //TypeListShort Contain most common object
 var TypeListShort = []Type{
 	Type{3, "CfgPerson", "Person", true},
+	Type{4, "CfgPlace", "Place", true},
 	Type{9, "CfgApplication", "Application", true},
 	Type{10, "CfgHost", "Host", true},
 }
@@ -22,6 +23,7 @@ var TypeListShort = []Type{
 var TypeListDefined = []Type{
 	Type{2, "CfgDN", "DN", true},
 	Type{3, "CfgPerson", "Person", true},
+	Type{4, "CfgPlace", "Place", true},
 	Type{5, "CfgAgentGroup", "Agent Group", true},
 	Type{9, "CfgApplication", "Application", true},
 	Type{10, "CfgHost", "Host", true},
@@ -121,7 +123,7 @@ type CfgFolder struct {
 	Type       string `json:"type"`
 	Customtype string `json:"customtype"`
 	Objectids  struct {
-		Idtype CfgDBIDList `json:"idtype"`
+		Idtype CfgDBIDTypeList `json:"idtype"`
 	} `json:"objectids"`
 }
 
@@ -147,11 +149,6 @@ type CfgSwitch struct {
 	//TODO
 }
 
-//CfgPlace TODO
-type CfgPlace struct {
-	*CfgObject
-	//TODO
-}
 */
 
 //CfgDN represent a DN object
@@ -206,6 +203,11 @@ type CfgDNGroup struct {
 //CfgDBIDList represent a generic list of dbid link
 type CfgDBIDList []struct {
 	Dbid string `json:"dbid"`
+}
+
+//CfgDBIDTypeList represent a generic list of dbid with type link
+type CfgDBIDTypeList []struct {
+	Dbid string `json:"dbid"`
 	Type string `json:"type,omitempty"`
 }
 
@@ -217,7 +219,7 @@ type CfgAccessGroup struct {
 	Dbid              string `json:"dbid"`
 	Folderid          string `json:"folderid"`
 	Memberids         struct {
-		Idtype CfgDBIDList `json:"idtype"`
+		Idtype CfgDBIDTypeList `json:"idtype"`
 	} `json:"memberids"`
 	Name           string `json:"name"`
 	Quotatabledbid string `json:"quotatabledbid"`
@@ -231,7 +233,7 @@ type CfgAccessGroup struct {
 //CfgAgentGroup represent a agent group
 type CfgAgentGroup struct {
 	Agentdbids struct {
-		ID CfgDBIDList `json:"id"`
+		ID CfgDBIDTypeList `json:"id"`
 	} `json:"agentdbids"`
 	Capacityruledbid  string `json:"capacityruledbid"`
 	Capacitytabledbid string `json:"capacitytabledbid"`
@@ -239,7 +241,7 @@ type CfgAgentGroup struct {
 	Dbid              string `json:"dbid"`
 	Folderid          string `json:"folderid"`
 	Managerdbids      struct {
-		ID CfgDBIDList `json:"id"`
+		ID CfgDBIDTypeList `json:"id"`
 	} `json:"managerdbids"`
 	Name           string `json:"name"`
 	Quotatabledbid string `json:"quotatabledbid"`
@@ -339,6 +341,23 @@ type Conninfo struct {
 	ID            string `json:"id"`
 }
 
+//CfgPlace represent a place definition
+type CfgPlace struct {
+	Sitedbid         string         `json:"sitedbid"`
+	Dbid             string         `json:"dbid"`
+	Tenantdbid       string         `json:"tenantdbid"`
+	Name             string         `json:"name"`
+	Userproperties   Userproperties `json:"userproperties,omitempty"`
+	Contractdbid     string         `json:"contractdbid"`
+	State            string         `json:"state"`
+	Type             string         `json:"type"`
+	Capacityruledbid string         `json:"capacityruledbid"`
+	Folderid         string         `json:"folderid"`
+	Dndbids          struct {
+		ID CfgDBIDList `json:"id,omitempty"`
+	} `json:"dndbids,omitempty"`
+}
+
 //CfgApplication represent an application definition
 type CfgApplication struct {
 	Dbid                 string         `json:"dbid,omitempty"`
@@ -373,10 +392,8 @@ type CfgApplication struct {
 		Resource []interface{} `json:"resource,omitempty"`
 	} `json:"resources,omitempty"`
 	Tenantdbids struct {
-		ID []struct {
-			Dbid string `json:"dbid"`
-		} `json:"id,omitempty"`
-		Mode string `json:"mode,omitempty"`
+		ID   CfgDBIDList `json:"id,omitempty"`
+		Mode string      `json:"mode,omitempty"`
 	} `json:"tenantdbids,omitempty"`
 	Startuptimeout   string `json:"startuptimeout,omitempty"`
 	Backupserverdbid string `json:"backupserverdbid,omitempty"`
