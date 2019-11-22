@@ -20,13 +20,13 @@ type Client struct {
 	BaseURL    *url.URL
 	UserAgent  string
 	Decoder    *encoding.Decoder
-	httpClient *http.Client
+	HTTPClient *http.Client
 }
 
 //NewClient generate a client to communicate with a specific instance
 func NewClient(host string, useSSL bool) *Client {
 	cookieJar, _ := cookiejar.New(nil)
-	c := &Client{BaseURL: &url.URL{Host: host, Scheme: "http", Path: "/gax/api/"}, UserAgent: "go-genesys/0.0", httpClient: &http.Client{
+	c := &Client{BaseURL: &url.URL{Host: host, Scheme: "http", Path: "/gax/api/"}, UserAgent: "go-genesys/0.0", HTTPClient: &http.Client{
 		Jar: cookieJar,
 	}}
 	if useSSL {
@@ -81,7 +81,7 @@ func (c *Client) do(req *http.Request, v interface{}) (*http.Response, error) {
 			"Body":    req.Body,
 		}).Debug("Executing request")
 	*/
-	resp, err := c.httpClient.Do(req)
+	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
 		/*
 			logrus.WithFields(logrus.Fields{
