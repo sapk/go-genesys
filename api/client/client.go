@@ -72,40 +72,13 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 }
 
 func (c *Client) do(req *http.Request, v interface{}) (*http.Response, error) {
-	/*
-		logrus.WithFields(logrus.Fields{
-			"Method":  req.Method,
-			"Path":    req.URL.Path,
-			"Query":   req.URL.RawQuery,
-			"Cookies": req.Cookies(),
-			"Body":    req.Body,
-		}).Debug("Executing request")
-	*/
 	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
-		/*
-			logrus.WithFields(logrus.Fields{
-				"Method": req.Method,
-				"Path":   req.URL.Path,
-				"Error":  err,
-			}).Debug("Request failed")
-		*/
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	//For debug
-	//buf := new(bytes.Buffer)
-	//buf.ReadFrom(resp.Body)
-	/*
-		logrus.WithFields(logrus.Fields{
-			"Method": req.Method,
-			"Path":   req.URL.Path,
-			"Status": resp.Status,
-			"Length": resp.ContentLength,
-		}).Debug("Request response")
-	*/
-	if resp.StatusCode != 201 {
+	if resp.StatusCode != 201 { //TODO also filter on content-type
 		var reader io.Reader
 		if c.Decoder != nil {
 			reader = c.Decoder.Reader(resp.Body)

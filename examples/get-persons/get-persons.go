@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/sapk/go-genesys/api/client"
+	"golang.org/x/text/encoding/charmap"
 )
 
 var (
@@ -19,6 +20,7 @@ func main() {
 		os.Exit(1)
 	}
 	c := client.NewClient(host, false)
+	c.Decoder = charmap.ISO8859_16.NewDecoder()
 	_, err := c.Login(user, pass)
 	if err != nil {
 		fmt.Printf("Failed to login as %s\n", user)
@@ -30,5 +32,7 @@ func main() {
 		fmt.Printf("Failed to get application %s: %v\n", "GAX", err)
 		os.Exit(3)
 	}
-	fmt.Printf("%v\n", personList)
+	for _, p := range personList {
+		fmt.Printf("%s %s\n", p.Firstname, p.Lastname)
+	}
 }
