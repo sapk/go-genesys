@@ -18,6 +18,9 @@ var (
 //Tests highly depends on a env test that need to be setup
 
 func TestLogin(t *testing.T) {
+	if TestHost == "" || TestUser == "" {
+		t.Skip("Skipping testing in without env set")
+	}
 	c := NewClient(TestHost, false)
 	u, err := c.Login(TestUser, TestPass)
 
@@ -30,6 +33,9 @@ func TestLogin(t *testing.T) {
 }
 
 func TestGetApplicationByName(t *testing.T) {
+	if TestHost == "" || TestUser == "" {
+		t.Skip("Skipping testing in without env set")
+	}
 	c := NewClient(TestHost, false)
 	_, err := c.Login(TestUser, TestPass)
 	if err != nil {
@@ -46,6 +52,9 @@ func TestGetApplicationByName(t *testing.T) {
 }
 
 func TestGetObjectByID(t *testing.T) {
+	if TestHost == "" || TestUser == "" {
+		t.Skip("Skipping testing in without env set")
+	}
 	c := NewClient(TestHost, false)
 	_, err := c.Login(TestUser, TestPass)
 	if err != nil {
@@ -63,6 +72,9 @@ func TestGetObjectByID(t *testing.T) {
 }
 
 func TestGetObjectByName(t *testing.T) {
+	if TestHost == "" || TestUser == "" {
+		t.Skip("Skipping testing in without env set")
+	}
 	c := NewClient(TestHost, false)
 	_, err := c.Login(TestUser, TestPass)
 	if err != nil {
