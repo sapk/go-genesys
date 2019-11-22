@@ -9,15 +9,17 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 	"strings"
+
+	"golang.org/x/text/encoding"
 )
 
 //Client Genesys GAX Api client
 //TODO add cache
 //TODO store current user to known if logged
 type Client struct {
-	BaseURL   *url.URL
-	UserAgent string
-
+	BaseURL    *url.URL
+	UserAgent  string
+	Decoder    *encoding.Decoder
 	httpClient *http.Client
 }
 
@@ -104,7 +106,13 @@ func (c *Client) do(req *http.Request, v interface{}) (*http.Response, error) {
 		}).Debug("Request response")
 	*/
 	if resp.StatusCode != 201 {
-		err = json.NewDecoder(resp.Body).Decode(v)
+		var reader io.Reader
+		if c.Decoder != nil {
+			reader = c.Decoder.Reader(resp.Body)
+		} else {
+			reader = resp.Body
+		}
+		err = json.NewDecoder(reader).Decode(v)
 	}
 	return resp, err
 }

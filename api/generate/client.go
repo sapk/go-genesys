@@ -25,7 +25,7 @@ import (
 
 	"github.com/sapk/go-genesys/api/object"
 )
-	`
+`
 	for _, o := range object.TypeListDefined {
 		fmt.Printf("Generate methods for: %s\n", o.Name)
 		str += `
@@ -41,8 +41,7 @@ func (c *Client) Get` + strings.TrimPrefix(o.Name, "Cfg") + `ByID(id string) (*o
 	var obj object.` + o.Name + `
 	_, err := c.GetObjectByID("` + o.Name + `", id, &obj)
 	return &obj, err
-}
-`
+}`
 
 		if o.Name == "CfgAgentLogin" {
 			str += `
