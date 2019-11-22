@@ -20,7 +20,7 @@ func main() {
 		os.Exit(1)
 	}
 	c := client.NewClient(host, false)
-	c.Decoder = charmap.ISO8859_16.NewDecoder()
+	c.Encoder = charmap.Windows1252.NewEncoder()
 	_, err := c.Login(user, pass)
 	if err != nil {
 		fmt.Printf("Failed to login as %s\n", user)

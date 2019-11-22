@@ -19,7 +19,7 @@ import (
 type Client struct {
 	BaseURL    *url.URL
 	UserAgent  string
-	Decoder    *encoding.Decoder
+	Encoder    *encoding.Encoder //Needed if for some reason the string is encode from Windows1252 to UTF-8
 	HTTPClient *http.Client
 }
 
@@ -80,8 +80,13 @@ func (c *Client) do(req *http.Request, v interface{}) (*http.Response, error) {
 
 	if resp.StatusCode != 201 { //TODO also filter on content-type
 		var reader io.Reader
-		if c.Decoder != nil {
-			reader = c.Decoder.Reader(resp.Body)
+		if c.Encoder != nil {
+			buf := new(bytes.Buffer)
+			wEnc := c.Encoder.Writer(buf)
+			if _, err := io.Copy(wEnc, resp.Body); err != nil {
+				return nil, err
+			}
+			reader = buf
 		} else {
 			reader = resp.Body
 		}
