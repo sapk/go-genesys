@@ -9,17 +9,16 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 	"strings"
-
-	"golang.org/x/text/encoding"
 )
 
 //Client Genesys GAX Api client
 //TODO add cache
 //TODO store current user to known if logged
 type Client struct {
-	BaseURL    *url.URL
-	UserAgent  string
-	Encoder    *encoding.Encoder //Needed if for some reason the string is encode from Windows1252 to UTF-8
+	BaseURL   *url.URL
+	UserAgent string
+	//Decoder   *encoding.Decoder //Needed if for some reason the string is encode from Windows1252 to UTF-8
+	//Encoder    *encoding.Encoder //Needed if for some reason the string is encode from Windows1252 to UTF-8
 	HTTPClient *http.Client
 }
 
@@ -79,18 +78,27 @@ func (c *Client) do(req *http.Request, v interface{}) (*http.Response, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 201 { //TODO also filter on content-type
-		var reader io.Reader
-		if c.Encoder != nil {
-			buf := new(bytes.Buffer)
-			wEnc := c.Encoder.Writer(buf)
-			if _, err := io.Copy(wEnc, resp.Body); err != nil {
-				return nil, err
+		//var reader io.Reader
+		/*
+			if c.Decoder != nil {
+				reader = c.Decoder.Reader(resp.Body)
+			} else {
+				reader = resp.Body
 			}
-			reader = buf
-		} else {
-			reader = resp.Body
-		}
-		err = json.NewDecoder(reader).Decode(v)
+		*/
+		/*
+			if c.Encoder != nil {
+				buf := new(bytes.Buffer)
+				wEnc := c.Encoder.Writer(buf)
+				if _, err := io.Copy(wEnc, resp.Body); err != nil {
+					return nil, err
+				}
+				reader = buf
+			} else {
+				reader = resp.Body
+			}
+		*/
+		err = json.NewDecoder(resp.Body).Decode(v)
 	}
 	return resp, err
 }
