@@ -7,5 +7,5 @@ require (
 	github.com/mitchellh/mapstructure v1.1.2
 	golang.org/x/crypto v0.0.0-20191119213627-4f8c1d86b1ba // indirect
 	google.golang.org/appengine v1.6.1 // indirect
-	xorm.io/xorm v0.8.0
+	xorm.io/xorm v0.8.1
 )
