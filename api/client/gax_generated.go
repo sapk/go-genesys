@@ -9,6 +9,34 @@ import (
 	"github.com/sapk/go-genesys/api/object"
 )
 
+//ListSwitch list all Switch
+func (c *Client) ListSwitch() ([]object.CfgSwitch, error) {
+	var apps []object.CfgSwitch
+	_, err := c.ListObject("CfgSwitch", &apps)
+	return apps, err
+}
+
+//GetSwitchByID retrieve a specific Switch by id
+func (c *Client) GetSwitchByID(id string) (*object.CfgSwitch, error) {
+	var obj object.CfgSwitch
+	_, err := c.GetObjectByID("CfgSwitch", id, &obj)
+	return &obj, err
+}
+
+//GetSwitchByName retrieve a specific Switch by name
+func (c *Client) GetSwitchByName(name string) (*object.CfgSwitch, error) {
+	var obj object.CfgSwitch
+	o, _, err := c.GetObjectByName("CfgSwitch", name)
+	if err != nil {
+		return nil, err
+	}
+	err = mapstructure.Decode(o, &obj) //TODO find a better way because mapstructure can use reflect under the hood
+	if err != nil {
+		return nil, err
+	}
+	return &obj, nil
+}
+
 //ListDN list all DN
 func (c *Client) ListDN() ([]object.CfgDN, error) {
 	var apps []object.CfgDN
