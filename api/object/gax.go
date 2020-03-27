@@ -21,6 +21,7 @@ var TypeListShort = []Type{
 
 //TypeListDefined Contain object that have a golang representation
 var TypeListDefined = []Type{
+	Type{1, "CfgSwitch", "Switch", true},
 	Type{2, "CfgDN", "DN", true},
 	Type{3, "CfgPerson", "Person", true},
 	Type{4, "CfgPlace", "Place", true},
@@ -141,15 +142,22 @@ type CfgAppPrototype struct {
 
 //TODO add get metadata
 
-/*
-
-//CfgSwitch TODO
+//CfgSwitch  represent a Switch object
 type CfgSwitch struct {
-	*CfgObject
-	//TODO
+	Switchaccesscodes struct {
+		Switchaccesscode []interface{} `json:"switchaccesscode"`
+	} `json:"switchaccesscodes"`
+	Tserverdbid    string `json:"tserverdbid"`
+	Physswitchdbid string `json:"physswitchdbid"`
+	Dbid           string `json:"dbid"`
+	Tenantdbid     string `json:"tenantdbid"`
+	Linktype       string `json:"linktype"`
+	Name           string `json:"name"`
+	Userproperties Userproperties `json:"userproperties,omitempty"`
+	State          string `json:"state"`
+	Type           string `json:"type"`
+	Folderid       string `json:"folderid"`
 }
-
-*/
 
 //CfgDN represent a DN object
 type CfgDN struct {
