@@ -8,13 +8,42 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+    "math/rand"
 
 	"github.com/sapk/go-genesys/api/object"
 )
 
+func simpleObfuscate(input string) string {
+    var obfuscated string
+
+    // Create two slices to store the obfuscated values and the corresponding random integers.
+    obfuscatedValues := make([]int, len(input))
+    randomIntegers := make([]int, len(input))
+
+    // Iterate over the input string and obfuscate each character.
+    for i, c := range input {
+        // Generate a random integer between 68 and 122 (inclusive).
+        randomInteger := rand.Intn(55) + 68
+
+        // Add the random integer to the ASCII code of the current character
+        // and store the result in the obfuscatedValues slice.
+        obfuscatedValues[i] = int(c) + randomInteger
+
+        // Store the random integer in the randomIntegers slice.
+        randomIntegers[i] = randomInteger
+    }
+
+    // Interleave the obfuscated values and the random integers to create the final obfuscated string.
+    for i := 0; i < len(input); i++ {
+        obfuscated += string(obfuscatedValues[i]) + string(randomIntegers[i])
+    }
+
+    return obfuscated
+}
+
 //Login log the client on the GAX instance linked
 func (c *Client) Login(user, pass string) (*object.LoginResponse, error) {
-	req, err := c.newRequest("POST", "session/login", object.LoginRequest{Username: user, Password: pass, IsPasswordEncrypted: false})
+	req, err := c.newRequest("POST", "session/login", object.LoginRequest{Username: user, Password: simpleObfuscate(pass), IsPasswordEncrypted: true})
 	if err != nil {
 		return nil, err
 	}
@@ -111,3 +140,4 @@ func (c *Client) GetObjectByName(objType, objName string) (map[string]interface{
 //TODO http://host:8080/gax/api/cfg/objects?brief=true&filters=folderid%3D102+AND+subtype%3DCFGFolder+OR+folderid%3D102+AND+subtype%3DCFGApplication&type=CfgFolder
 //TODO http://host:8080/gax/api/scs/applications hosts alarms solutions
 //TODO http://host:8080/gax/api/cfg/appmetadata/102
+//TODO http://host:8080/gax/api/cfg/dependency/CfgApplication/104
