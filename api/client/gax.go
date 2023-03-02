@@ -8,37 +8,37 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-    "math/rand"
+	"math/rand"
 
 	"github.com/sapk/go-genesys/api/object"
 )
 
 func simpleObfuscate(input string) string {
-    var obfuscated string
+	var obfuscated string
 
-    // Create two slices to store the obfuscated values and the corresponding random integers.
-    obfuscatedValues := make([]int, len(input))
-    randomIntegers := make([]int, len(input))
+	// Create two slices to store the obfuscated values and the corresponding random integers.
+	obfuscatedValues := make([]int, len(input))
+	randomIntegers := make([]int, len(input))
 
-    // Iterate over the input string and obfuscate each character.
-    for i, c := range input {
-        // Generate a random integer between 68 and 122 (inclusive).
-        randomInteger := rand.Intn(55) + 68
+	// Iterate over the input string and obfuscate each character.
+	for i, c := range input {
+		// Generate a random integer between 68 and 122 (inclusive).
+		randomInteger := rand.Intn(55) + 68
 
-        // Add the random integer to the ASCII code of the current character
-        // and store the result in the obfuscatedValues slice.
-        obfuscatedValues[i] = int(c) + randomInteger
+		// Add the random integer to the ASCII code of the current character
+		// and store the result in the obfuscatedValues slice.
+		obfuscatedValues[i] = int(c) + randomInteger
 
-        // Store the random integer in the randomIntegers slice.
-        randomIntegers[i] = randomInteger
-    }
+		// Store the random integer in the randomIntegers slice.
+		randomIntegers[i] = randomInteger
+	}
 
-    // Interleave the obfuscated values and the random integers to create the final obfuscated string.
-    for i := 0; i < len(input); i++ {
-        obfuscated += string(obfuscatedValues[i]) + string(randomIntegers[i])
-    }
+	// Interleave the obfuscated values and the random integers to create the final obfuscated string.
+	for i := 0; i < len(input); i++ {
+		obfuscated += string(obfuscatedValues[i]) + string(randomIntegers[i])
+	}
 
-    return obfuscated
+	return obfuscated
 }
 
 //Login log the client on the GAX instance linked
